@@ -26,7 +26,6 @@ window.addEventListener('load', () => {
     initialize();
     registerEventHandlers();
     populateWordList(wordListFilePath);
-
 });
 
 /**
@@ -156,4 +155,46 @@ function tokenize (textContent) {
         tokens[tokens.length - 1] = tokens[tokens.length - 1].trim();
     }
     return tokens;
+}
+
+/**
+ * Returns a bootstrap div row element with a single column text content
+ * @param {String} text 
+ * @param {String[]} [optionalClassList] optional CSS classes to add to the container 
+ * 
+ * @returns {HTMLElement} Bootstrap div row element
+ */
+function getMessageNode(text, optionalClassList) {
+    let row     = document.createElement("div");
+    let column  = document.createElement("div");
+    
+    row.classList.add("row", "p-3");
+    column.classList.add("col");
+    if (optionalClassList && optionalClassList.length > 0) {
+        row.classList.add(...optionalClassList);
+    }   
+    column.textContent = text;
+    
+    row.appendChild(column);
+    return row;
+}
+
+/**
+ * Returns a bootstrap div row element styled as a user text node
+ * @param {String} text 
+ * 
+ * @returns {HTMLElement} A bootstrap div row element styled as a user text node
+ */
+function getUserTextNode(text) {
+    return getMessageNode(text, ["bg-info", "text-right"]);
+}
+
+/**
+ * Returns a bootstrap div row element styled as a opponent text node
+ * @param {String} text 
+ * 
+ * @returns {HTMLElement} A bootstrap div row element styled as a opponent text node
+ */
+function getOpponentTextNode(text) {
+    return getMessageNode(text, ["bg-dark", "text-white"]);
 }

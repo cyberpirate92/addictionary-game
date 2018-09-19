@@ -16,10 +16,17 @@ var timerInstance;
 /** @type {Number} */
 var elapsedSeconds;
 
-// Entry point of the application
+/** @type {string[]} */
+var wordList;
+
+/** @type {String} */
+const wordListFilePath = "wordlist.txt";
+
 window.addEventListener('load', () => {
     initialize();
     registerEventHandlers();
+    populateWordList(wordListFilePath);
+
 });
 
 /**
@@ -29,7 +36,7 @@ window.addEventListener('load', () => {
  */
 function initialize () {
 
-    elapsedSeconds = 0;
+    elapsedSeconds      = 0;
 
     gameStartButton     = document.querySelector("#gameStartBtn");
     gameContainer       = document.querySelector("#gameContainer");
@@ -112,4 +119,41 @@ function padStart (totalLength, padCharacter, stringToBePadded) {
         }
     }
     return stringToBePadded;
+}
+
+/**
+ * Fetches the content of the specified text file and populates the word list
+ * @param {String} pathToFile relative path to the file
+ * 
+ * @returns {void} 
+ */
+function populateWordList(pathToFile) {
+    let xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.open("GET", pathToFile, false);
+    xmlHttpRequest.onreadystatechange = function () {
+        if (xmlHttpRequest.readyState === 4)
+        {
+            if (xmlHttpRequest.status === 200 || xmlHttpRequest.status === 0) 
+            {
+                let textContent = xmlHttpRequest.responseText;
+                words = tokenize(textContent);
+            }
+        }
+    }
+    xmlHttpRequest.send();
+}
+
+/**
+ * Tokenizes the given string and populates the wordlist
+ * @param {String} textContent The string from which words are to be extracted
+ * 
+ * @returns {String[]} Array of tokenized words
+ */
+function tokenize (textContent) {
+    let tokens = [];
+    if (textContent.length > 0) {
+        tokens = textContent.split(" ");
+        tokens[tokens.length - 1] = tokens[tokens.length - 1].trim();
+    }
+    return tokens;
 }
